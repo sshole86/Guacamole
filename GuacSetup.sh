@@ -9,6 +9,12 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
+# AWS Ubuntu 18.04 image doesn't play nice with ipv6
+echo "net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1" >> /etc/sysctl.conf
+sysctl -p
+
 GUAC_VERSION=1.0.0
 GUAC_SERVER=guacamole-server-${GUAC_VERSION}
 GUAC_CLIENT=guacamole-client-${GUAC_VERSION}
@@ -51,7 +57,7 @@ wget ${GUAC_SERVER_DOWNLOAD}
 tar -xzf ${GUAC_SERVER}.tar.gz
 rm -f ${GUAC_SERVER}.tar.gz
 mv ${GUAC_SERVER} guacserver
-cd guacserver
+sleep 1 && cd guacserver
 autoreconf -fi
 ./configure --with-init-dir=/etc/init.d
 make
@@ -73,7 +79,7 @@ wget ${GUAC_CLIENT_DOWNLOAD}
 tar -xzf ${GUAC_CLIENT}.tar.gz
 rm -f ${GUAC_CLIENT}.tar.gz
 mv ${GUAC_CLIENT} guacclient
-cd guacclient
+sleep 1 && cd guacclient
 mvn package
 cp guacamole/target/${GUAC_CLIENT}.war /etc/guacamole/app.war
 
