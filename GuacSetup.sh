@@ -4,6 +4,11 @@
 # Default authentication is MySQL database - you must provide this
 # Nginx is setup as reverse proxy and forces HTTPS so you must provide valid certificate
 #
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root"
+  exit
+fi
+
 GUAC_VERSION=1.0.0
 GUAC_SERVER=guacamole-server-${GUAC_VERSION}
 GUAC_CLIENT=guacamole-client-${GUAC_VERSION}
