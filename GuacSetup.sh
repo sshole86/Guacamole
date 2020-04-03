@@ -26,8 +26,7 @@ apt update
 apt upgrade -y
 
 # Install dependencies
-apt install -y dpkg autoconf libtool build-essential wget maven nginx tomcat9 fail2ban openjdk-8-jdk libjpeg-turbo8-dev \
-	libcairo2-dev libpng-dev libossp-uuid-dev libssl-dev libwebp-dev libmysql-java
+apt install -y dpkg autoconf libtool build-essential wget maven nginx tomcat9 fail2ban openjdk-8-jdk libjpeg-turbo8-dev libcairo2-dev libpng-dev libossp-uuid-dev libssl-dev libwebp-dev libmysql-java
 
 # Install VNC dependencies
 apt install -y libvncserver-dev libpulse-dev
@@ -160,8 +159,8 @@ server {
 }" > /etc/nginx/sites-available/default
 echo "You must provide a valid SSL/TLS certificate and place it in /etc/nginx/bundle.pem and /etc/nginx/server.key"
 
-# Setup fail2ban for gateway/guacamole
-cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local | tee -a $logfile || exit 1
+# Setup fail2ban for guacamole
+cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
 sed -i ':a;N;$!ba;s/\[guacamole\]\n\nport/[guacamole]\nenabled = true\nport/g' /etc/fail2ban/jail.local
 sed -i ':a;N;$!ba;s/\/var\/log\/tomcat\*\/catalina.out/\/var\/log\/syslog/g' /etc/fail2ban/jail.local
 sed -i 's/failregex = /failregex = ^.*Authentication attempt from <HOST> for user "[^"]*" failed\.$\n#/g' /etc/fail2ban/filter.d/guacamole.conf
